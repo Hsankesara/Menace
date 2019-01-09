@@ -7,9 +7,10 @@ class State():
     
     def init_beads(self):
         beads = {}
+        zero_count = max(self.state.count('0') - 1,2)
         for idx, i in enumerate(self.state):
             if i == '0':
-                beads[idx] = 4
+                beads[idx] = zero_count
         return beads
     
     def get_beads(self):
@@ -59,6 +60,11 @@ def check_win(state):
     else:
         return False
 
+def check_draw(states):
+    if states.count('0') == 0:
+        return True
+    return False
+
 def give_reward(states, menacing_states, menacing_steps, reward):
     for idx, state in enumerate(menacing_states):
         print(''.join(list(state)))
@@ -78,6 +84,7 @@ def game_on(states):
     while(True):
         print("Game Start")
         current_state = list('000000000')
+        prnt_game(current_state)
         menacing_steps = []
         menacing_states = []
         while(True):
@@ -97,6 +104,11 @@ def game_on(states):
                     prnt_game(current_state)
                     print('User won')
                     break
+                if check_draw(current_state):
+                    give_reward(states, menacing_states, menacing_steps, 1)
+                    prnt_game(current_state)
+                    print('Game Draw')
+                    break
                 print('********')
                 print(''.join(current_state))
                 menacing_states.append(tuple(current_state))
@@ -113,6 +125,11 @@ def game_on(states):
                     give_reward(states, menacing_states, menacing_steps, 3)
                     prnt_game(current_state)
                     print('Menace won')
+                    break
+                if check_draw(current_state):
+                    give_reward(states, menacing_states, menacing_steps, 1)
+                    prnt_game(current_state)
+                    print('Game Draw')
                     break
                 prnt_game(current_state)
             except ValueError:
