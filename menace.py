@@ -1,6 +1,9 @@
 import numpy as np
 import itertools
 import pickle
+import tictactoe
+import pygame
+
 class State():
     def __init__(self, state):
         self.state = state
@@ -156,11 +159,34 @@ def game_on(states, path):
     pickle.dump(states, pickle_out)
     pickle_out.close()
 
-def main():
+def main():# --------------------------------------------------------------------
+# initialize pygame and our window
+    pygame.init()
+    ttt = pygame.display.set_mode ((300, 325))
+    pygame.display.set_caption ('Tic-Tac-Toe')
+
+    # create the game board
+    board = tictactoe.initBoard (ttt)
+
+    # main event loop
+    running = 1
+
+    while (running == 1):
+        for event in pygame.event.get():
+            if event.type is tictactoe.QUIT:
+                running = 0
+            elif event.type is tictactoe.MOUSEBUTTONDOWN:
+                # the user clicked; place an X or O
+                tictactoe.clickBoard(board)
+            # check for a winner
+            tictactoe.gameWon(board)
+
+            # update the display
+            tictactoe.showBoard(ttt, board)
+
     path = 'model.pickle'
     all_permutations  = ["".join(seq) for seq in itertools.product("012", repeat=9)]
     states = create_states(all_permutations)
-    print(states[all_permutations[33]].beads, all_permutations[33])
     game_on(states, path)
 
 
