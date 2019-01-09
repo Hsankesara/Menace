@@ -104,13 +104,13 @@ def game_on(states, path):
             try:
                 a = int(input())
                 if a < 1 or a > 9:
-                    print('Chutiye sahi se bhar')
+                    print('The place is already  filled! Please fill an unoccupied  place')
                     continue
                 a -= 1
                 if current_state[a] == '0':
                     current_state[a] = '2'
                 else:
-                    print('Chutiye sahi se bhar')
+                    print('The place is already  filled! Please fill an unoccupied  place')
                     continue
                 if check_win(current_state):
                     give_reward(states, menacing_states, menacing_steps, -1)
@@ -134,7 +134,7 @@ def game_on(states, path):
                 if current_state[current_bead] == '0':
                     current_state[current_bead] = '1'
                 else:
-                    print('Chutiye sahi se bhar')
+                    print('The place is already filled! Please fill an unoccupied place')
                     break
                 if check_win(current_state):
                     give_reward(states, menacing_states, menacing_steps, 3)
@@ -150,12 +150,11 @@ def game_on(states, path):
                     break
                 prnt_game(current_state)
             except ValueError:
-                print('Chutiye sahi se bhar')
+                print('The place is already  filled! Please fill an unoccupied  place')
                 continue
     pickle_out = open(path,"wb")
     pickle.dump(states, pickle_out)
     pickle_out.close()
-    return
 
 def main():
     path = 'model.pickle'
@@ -163,7 +162,7 @@ def main():
     states = create_states(all_permutations)
     print(states[all_permutations[33]].beads, all_permutations[33])
     game_on(states, path)
-    pass
+
 
 if __name__ == "__main__":
     main()
