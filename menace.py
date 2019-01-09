@@ -3,7 +3,8 @@ import itertools
 import pickle
 import tictactoe
 import pygame
-
+from pygame.locals import *
+# https://raw.githubusercontent.com/nyergler/teaching-python-with-pygame/master/ttt-tutorial/tictactoe.py
 class State():
     def __init__(self, state):
         self.state = state
@@ -90,7 +91,7 @@ def quit_prompt():
         return True
     return False
 
-def game_on(states, path):
+def game_on(states, path, ttt):
     try:
         pickle_in = open(path,"rb")
         states = pickle.load(pickle_in)
@@ -104,54 +105,67 @@ def game_on(states, path):
         menacing_steps = []
         menacing_states = []
         while(True):
+            # create the game board
+            board = tictactoe.initBoard (ttt)
             try:
-                a = int(input())
-                if a < 1 or a > 9:
-                    print('The place is already  filled! Please fill an unoccupied  place')
-                    continue
-                a -= 1
-                if current_state[a] == '0':
-                    current_state[a] = '2'
-                else:
-                    print('The place is already  filled! Please fill an unoccupied  place')
-                    continue
-                if check_win(current_state):
-                    give_reward(states, menacing_states, menacing_steps, -1)
-                    prnt_game(current_state)
-                    print('User won')
-                    wanna_quit = quit_prompt()
-                    break
-                if check_draw(current_state):
-                    give_reward(states, menacing_states, menacing_steps, 1)
-                    prnt_game(current_state)
-                    wanna_quit = quit_prompt()
-                    print('Game Draw')
-                    break
-                print('********')
-                print(''.join(current_state))
-                menacing_states.append(tuple(current_state))
-                current_bead = states[''.join(current_state)].get_beads()
-                menacing_steps.append(current_bead)
-                print(current_bead)
-                print('********')
-                if current_state[current_bead] == '0':
-                    current_state[current_bead] = '1'
-                else:
-                    print('The place is already filled! Please fill an unoccupied place')
-                    break
-                if check_win(current_state):
-                    give_reward(states, menacing_states, menacing_steps, 3)
-                    prnt_game(current_state)
-                    print('Menace won')
-                    wanna_quit = quit_prompt()
-                    break
-                if check_draw(current_state):
-                    give_reward(states, menacing_states, menacing_steps, 1)
-                    prnt_game(current_state)
-                    print('Game Draw')
-                    wanna_quit = quit_prompt()
-                    break
-                prnt_game(current_state)
+                row, col = [0,0]
+                for event in pygame.event.get():
+                    if event.type is QUIT:
+                        wanna_quit = True
+                        break
+                    elif event.type is MOUSEBUTTONDOWN:
+                        # the user clicked; place an X or O
+                        tictactoe.clickBoard(board)
+                        # check for a winner
+                        row, col = tictactoe.gameWon(board)
+                        a = row * 3 + col
+                        if current_state[a] == '0':
+                            current_state[a] = '2'
+                        else:
+                            print('The place is already  filled! Please fill an unoccupied  place')
+                            continue
+                        if check_win(current_state):
+                            give_reward(states, menacing_states, menacing_steps, -1)
+                            prnt_game(current_state)
+                            print('User won')
+                            wanna_quit = quit_prompt()
+                            break
+                        if check_draw(current_state):
+                            give_reward(states, menacing_states, menacing_steps, 1)
+                            prnt_game(current_state)
+                            wanna_quit = quit_prompt()
+                            print('Game Draw')
+                            break
+                        print('********')
+                        print(''.join(current_state))
+                        menacing_states.append(tuple(current_state))
+                        current_bead = states[''.join(current_state)].get_beads()
+                        menacing_steps.append(current_bead)
+                        print(current_bead)
+                        print('********')
+                        row_bead = int(current_bead / 3)
+                        col_bead = current_bead % 3
+                        tictactoe.drawMove (board, row_bead, col_bead, "O")
+                        tictactoe.gameWon(board)
+                        if current_state[current_bead] == '0':
+                            current_state[current_bead] = '1'
+                        else:
+                            print('The place is already filled! Please fill an unoccupied place')
+                            break
+                        if check_win(current_state):
+                            give_reward(states, menacing_states, menacing_steps, 3)
+                            prnt_game(current_state)
+                            print('Menace won')
+                            wanna_quit = quit_prompt()
+                            break
+                        if check_draw(current_state):
+                            give_reward(states, menacing_states, menacing_steps, 1)
+                            prnt_game(current_state)
+                            print('Game Draw')
+                            wanna_quit = quit_prompt()
+                            break
+                        prnt_game(current_state)
+                        tictactoe.showBoard(ttt, board)
             except ValueError:
                 print('The place is already  filled! Please fill an unoccupied  place')
                 continue
@@ -164,30 +178,10 @@ def main():# -------------------------------------------------------------------
     pygame.init()
     ttt = pygame.display.set_mode ((300, 325))
     pygame.display.set_caption ('Tic-Tac-Toe')
-
-    # create the game board
-    board = tictactoe.initBoard (ttt)
-
-    # main event loop
-    running = 1
-
-    while (running == 1):
-        for event in pygame.event.get():
-            if event.type is tictactoe.QUIT:
-                running = 0
-            elif event.type is tictactoe.MOUSEBUTTONDOWN:
-                # the user clicked; place an X or O
-                tictactoe.clickBoard(board)
-            # check for a winner
-            tictactoe.gameWon(board)
-
-            # update the display
-            tictactoe.showBoard(ttt, board)
-
     path = 'model.pickle'
     all_permutations  = ["".join(seq) for seq in itertools.product("012", repeat=9)]
     states = create_states(all_permutations)
-    game_on(states, path)
+    game_on(states, path, ttt)
 
 
 if __name__ == "__main__":

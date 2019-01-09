@@ -135,7 +135,6 @@ def clickBoard(board):
     
     (mouseX, mouseY) = pygame.mouse.get_pos()
     (row, col) = boardPos (mouseX, mouseY)
-
     # make sure no one's used this space
     if ((grid[row][col] == "X") or (grid[row][col] == "O")):
         # this space is in use
@@ -143,12 +142,8 @@ def clickBoard(board):
 
     # draw an X or O
     drawMove (board, row, col, XO)
+    return row, col
 
-    # toggle XO to the other player's move
-    if (XO == "X"):
-        XO = "O"
-    else:
-        XO = "X"
     
 def gameWon(board):
     # determine if anyone has won the game
