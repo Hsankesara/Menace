@@ -1,5 +1,6 @@
 import numpy as np
 import itertools
+import pickle
 class State():
     def __init__(self, state):
         self.state = state
@@ -79,9 +80,21 @@ def prnt_game(state):
         if (idx+1)%3 == 0:
             print('\n- | - | -')
         
+def quit_prompt():
+    print('Wanna Quit? Press Y')
+    s = input()
+    if s == 'Y':
+        return True
+    return False
 
-def game_on(states):
-    while(True):
+def game_on(states, path):
+    try:
+        pickle_in = open(path,"rb")
+        states = pickle.load(pickle_in)
+    except FileNotFoundError:
+        pass
+    wanna_quit = False
+    while(not wanna_quit):
         print("Game Start")
         current_state = list('000000000')
         prnt_game(current_state)
@@ -103,10 +116,12 @@ def game_on(states):
                     give_reward(states, menacing_states, menacing_steps, -1)
                     prnt_game(current_state)
                     print('User won')
+                    wanna_quit = quit_prompt()
                     break
                 if check_draw(current_state):
                     give_reward(states, menacing_states, menacing_steps, 1)
                     prnt_game(current_state)
+                    wanna_quit = quit_prompt()
                     print('Game Draw')
                     break
                 print('********')
@@ -125,22 +140,29 @@ def game_on(states):
                     give_reward(states, menacing_states, menacing_steps, 3)
                     prnt_game(current_state)
                     print('Menace won')
+                    wanna_quit = quit_prompt()
                     break
                 if check_draw(current_state):
                     give_reward(states, menacing_states, menacing_steps, 1)
                     prnt_game(current_state)
                     print('Game Draw')
+                    wanna_quit = quit_prompt()
                     break
                 prnt_game(current_state)
             except ValueError:
                 print('Chutiye sahi se bhar')
                 continue
+    pickle_out = open(path,"wb")
+    pickle.dump(states, pickle_out)
+    pickle_out.close()
+    return
 
 def main():
+    path = 'model.pickle'
     all_permutations  = ["".join(seq) for seq in itertools.product("012", repeat=9)]
     states = create_states(all_permutations)
     print(states[all_permutations[33]].beads, all_permutations[33])
-    game_on(states)
+    game_on(states, path)
     pass
 
 if __name__ == "__main__":
