@@ -6,6 +6,7 @@ import pygame
 import time
 from pygame.locals import *
 import sys
+from tqdm import tqdm
 
 # https://raw.githubusercontent.com/nyergler/teaching-python-with-pygame/master/ttt-tutorial/tictactoe.py
 class State():
@@ -75,17 +76,20 @@ def check_draw(states):
 
 def give_reward(states, menacing_states, menacing_steps, reward):
     for idx, state in enumerate(menacing_states):
-        print(''.join(list(state)))
-        print(menacing_steps[idx], idx)
-        print(states[''.join(list(state))].beads)
+        #print(''.join(list(state)))
+        #print(menacing_steps[idx], idx)
+        #print(states[''.join(list(state))].beads)
         states[''.join(list(state))].set_beads(menacing_steps[idx], reward)
-        print(states[''.join(list(state))].beads)
+        #print(states[''.join(list(state))].beads)
 
 def prnt_game(state):
+    """
     for idx, i in enumerate(state):
         print(i + ' | ', end='')
         if (idx+1)%3 == 0:
             print('\n- | - | -')
+    """
+    pass
         
 def quit_prompt():
     print('Wanna Quit? Press Y')
@@ -104,9 +108,10 @@ def game_on(states, path):
     try:
         pickle_in = open(path,"rb")
         states = pickle.load(pickle_in)
-        'Model Loaded'
+        print('Model Loaded')
     except FileNotFoundError:
         pass
+    #print(states['000000001'].beads)
     wanna_quit = False
     while(not wanna_quit):
         print("Game Start")
@@ -140,7 +145,7 @@ def game_on(states, path):
                             continue
                         a = row * 3 + col
                         if current_state[a] == '0':
-                            current_state[a] = '2'
+                            current_state[a] = '1'
                             states = check_state(states, current_state)
                         else:
                             print('The place is already  filled! Please fill an unoccupied  place')
@@ -161,20 +166,20 @@ def game_on(states, path):
                             time.sleep(1)
                             new_game = True
                             break
-                        print('********')
-                        print(''.join(current_state))
+                        #print('********')
+                        #print(''.join(current_state))
                         menacing_states.append(tuple(current_state))
                         current_bead = states[''.join(current_state)].get_beads()
                         menacing_steps.append(current_bead)
-                        print(current_bead)
-                        print('********')
+                        #print(current_bead)
+                        #print('********')
                         row_bead = int(current_bead / 3)
                         col_bead = current_bead % 3
                         tictactoe.drawMove (board, row_bead, col_bead, "O")
                         tictactoe.gameWon(board)
                         tictactoe.showBoard(ttt, board)
                         if current_state[current_bead] == '0':
-                            current_state[current_bead] = '1'
+                            current_state[current_bead] = '2'
                             states = check_state(states, current_state)
                         else:
                             print('The place is already filled! Please fill an unoccupied place')
@@ -202,7 +207,7 @@ def game_on(states, path):
                 continue
 def train_game(states, path, iterations):
     
-    for _ in range(iterations):
+    for _ in tqdm(range(iterations)):
         #print("Game Start")
         current_state = list('000000000')
         prnt_game(current_state)
@@ -237,8 +242,6 @@ def train_game(states, path, iterations):
                 menacing_states2.append(tuple(current_state))
                 current_bead = states[''.join(current_state)].get_beads()
                 menacing_steps2.append(current_bead)
-                print('YAHA')
-                print(current_state, current_bead)
                 current_state[current_bead] = '2'
                 states = check_state(states, current_state)
                 #print(current_bead)
@@ -259,6 +262,7 @@ def train_game(states, path, iterations):
             except ValueError:
                 print('The place is already  filled! Please fill an unoccupied  place')
                 continue
+    print('training completed')
     pickle_out = open(path,"wb")
     pickle.dump(states, pickle_out)
     pickle_out.close()
@@ -275,10 +279,10 @@ def main():
         mode =  'test'
     path = 'model.pickle'
     states = {'000000000' : State('000000000')}
-    print(mode)
     if mode=='test':
         game_on(states, path)
     else:
+        print('Training started')
         train_game(states, path, iterations)
 
 if __name__ == "__main__":
