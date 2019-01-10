@@ -1,0 +1,4 @@
+numpy>=1.15.4
+pickleshare>=0.7.5
+pygame>=1.9.4
+tqdm>=4.29.0

@@ -8,7 +8,6 @@
 # import necessary modules
 import pygame
 from pygame.locals import *
-import menace
 
 # declare our global variables for the game
 XO   = "X"   # track whose turn it is; X goes first

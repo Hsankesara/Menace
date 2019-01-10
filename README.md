@@ -1,14 +1,7 @@
 # AI-lab
 AI  lab work
 
-## Menace
-
-To run the game
-```bash
-python3 menace.py
-```
-
-To train the game
-```bash
-python3 menace.py train NUM_ITERATIONS
-```
+|Project|Language|Reference|
+|-----|---------------|----------|
+|[Menace](Menace/)|Python|[Menace](http://chalkdustmagazine.com/features/menace-machine-educable-noughts-crosses-engine/)|
+|[n-arm bandit problm](n-arm_bandit_problem/)|Matlab|[Multi Arm bandit Problem](https://lilianweng.github.io/lil-log/2018/01/23/the-multi-armed-bandit-problem-and-its-solutions.html)|
