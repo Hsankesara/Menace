@@ -30,7 +30,6 @@ class State():
         for  idx, i in enumerate(values):
             prob += i
             if rand < prob:
-                self.beads[keys[idx]] -= 1
                 return keys[idx]
         
     def set_beads(self, key, reward):
