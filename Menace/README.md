@@ -14,6 +14,5 @@ python3 menace.py
 
 To train the game
 ```bash
-cd menace/
 python3 menace.py train NUM_ITERATIONS
 ```
