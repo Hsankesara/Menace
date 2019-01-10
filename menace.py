@@ -3,6 +3,7 @@ import itertools
 import pickle
 import tictactoe
 import pygame
+import time
 from pygame.locals import *
 # https://raw.githubusercontent.com/nyergler/teaching-python-with-pygame/master/ttt-tutorial/tictactoe.py
 class State():
@@ -139,14 +140,16 @@ def game_on(states, path):
                             give_reward(states, menacing_states, menacing_steps, -1)
                             prnt_game(current_state)
                             print('User won')
-                            wanna_quit = quit_prompt()
+                            # wanna_quit = quit_prompt()
+                            time.sleep(1)
                             new_game = True
                             break
                         if check_draw(current_state):
                             give_reward(states, menacing_states, menacing_steps, 1)
                             prnt_game(current_state)
                             print('Game Draw')
-                            wanna_quit = quit_prompt()
+                            # wanna_quit = quit_prompt()
+                            time.sleep(1)
                             new_game = True
                             break
                         print('********')
@@ -170,15 +173,16 @@ def game_on(states, path):
                             give_reward(states, menacing_states, menacing_steps, 3)
                             prnt_game(current_state)
                             print('Menace won')
-                            wanna_quit = quit_prompt()
+                            # wanna_quit = quit_prompt()
+                            time.sleep(1)
                             new_game = True
                             break
                         if check_draw(current_state):
                             give_reward(states, menacing_states, menacing_steps, 1)
                             prnt_game(current_state)
                             print('Game Draw')
-                            wanna_quit = quit_prompt()
-                            new_game = True
+                            # wanna_quit = quit_prompt()
+                            time.sleep(1)
                             break
                         prnt_game(current_state)
                         tictactoe.showBoard(ttt, board)
