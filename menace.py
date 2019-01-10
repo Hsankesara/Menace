@@ -91,12 +91,19 @@ def quit_prompt():
         return True
     return False
 
+def check_state(states, current_state):
+    if ''.join(current_state) in states:
+        return states
+    states[''.join(current_state)] = State(current_state)
+    return states
+
 def game_on(states, path):
     try:
         pickle_in = open(path,"rb")
         states = pickle.load(pickle_in)
     except FileNotFoundError:
         pass
+
     wanna_quit = False
     while(not wanna_quit):
         print("Game Start")
@@ -105,7 +112,7 @@ def game_on(states, path):
         menacing_steps = []
         menacing_states = []
         pygame.init()
-        tictactoe.grid = [ [ None, Nonegit , None ], \
+        tictactoe.grid = [ [ None, None, None ], \
                             [ None, None, None ], \
                             [ None, None, None ] ]
         tictactoe.winner = None
@@ -114,6 +121,7 @@ def game_on(states, path):
         board = tictactoe.initBoard (ttt)
         new_game = False
         while(not new_game):
+
             # create the game board
             try:
                 for event in pygame.event.get():
@@ -132,6 +140,7 @@ def game_on(states, path):
                         a = row * 3 + col
                         if current_state[a] == '0':
                             current_state[a] = '2'
+                            states = check_state(states, current_state)
                         else:
                             print('The place is already  filled! Please fill an unoccupied  place')
                             continue
@@ -165,6 +174,7 @@ def game_on(states, path):
                         tictactoe.showBoard(ttt, board)
                         if current_state[current_bead] == '0':
                             current_state[current_bead] = '1'
+                            states = check_state(states, current_state)
                         else:
                             print('The place is already filled! Please fill an unoccupied place')
                             break
@@ -193,13 +203,10 @@ def game_on(states, path):
     pickle.dump(states, pickle_out)
     pickle_out.close()
 
-def main():# --------------------------------------------------------------------
-    # initialize pygame and our window
+def main():
     path = 'model.pickle'
-    all_permutations  = ["".join(seq) for seq in itertools.product("012", repeat=9)]
-    states = create_states(all_permutations)
+    states = {'000000000' : create_states('000000000')}
     game_on(states, path)
-
 
 if __name__ == "__main__":
     main()
