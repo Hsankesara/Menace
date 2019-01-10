@@ -105,15 +105,21 @@ def game_on(states, path):
         menacing_steps = []
         menacing_states = []
         pygame.init()
+        tictactoe.grid = [ [ None, None, None ], \
+                            [ None, None, None ], \
+                            [ None, None, None ] ]
+        tictactoe.winner = None
         ttt = pygame.display.set_mode ((300, 325))
         pygame.display.set_caption ('Tic-Tac-Toe')
         board = tictactoe.initBoard (ttt)
-        while(True):
+        new_game = False
+        while(not new_game):
             # create the game board
             try:
                 for event in pygame.event.get():
                     if event.type is QUIT:
                         wanna_quit = True
+                        new_game = True
                         break
                     elif event.type is MOUSEBUTTONDOWN:
                         # the user clicked; place an X or O
@@ -134,12 +140,14 @@ def game_on(states, path):
                             prnt_game(current_state)
                             print('User won')
                             wanna_quit = quit_prompt()
+                            new_game = True
                             break
                         if check_draw(current_state):
                             give_reward(states, menacing_states, menacing_steps, 1)
                             prnt_game(current_state)
                             wanna_quit = quit_prompt()
                             print('Game Draw')
+                            new_game = True
                             break
                         print('********')
                         print(''.join(current_state))
@@ -162,12 +170,14 @@ def game_on(states, path):
                             prnt_game(current_state)
                             print('Menace won')
                             wanna_quit = quit_prompt()
+                            new_game = True
                             break
                         if check_draw(current_state):
                             give_reward(states, menacing_states, menacing_steps, 1)
                             prnt_game(current_state)
                             print('Game Draw')
                             wanna_quit = quit_prompt()
+                            new_game = True
                             break
                         prnt_game(current_state)
                         tictactoe.showBoard(ttt, board)
