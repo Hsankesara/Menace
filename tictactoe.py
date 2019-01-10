@@ -131,18 +131,18 @@ def clickBoard(board):
     # ---------------------------------------------------------------
     # board : the game board surface
     
-    global grid, XO
+    global grid
     
     (mouseX, mouseY) = pygame.mouse.get_pos()
     (row, col) = boardPos (mouseX, mouseY)
     # make sure no one's used this space
     if ((grid[row][col] == "X") or (grid[row][col] == "O")):
         # this space is in use
-        return
+        return None, None
 
     # draw an X or O
-    drawMove (board, row, col, XO)
-    return row, col
+    drawMove (board, row, col, "X")
+    return board, row, col
 
     
 def gameWon(board):

@@ -91,7 +91,7 @@ def quit_prompt():
         return True
     return False
 
-def game_on(states, path, ttt):
+def game_on(states, path):
     try:
         pickle_in = open(path,"rb")
         states = pickle.load(pickle_in)
@@ -104,20 +104,25 @@ def game_on(states, path, ttt):
         prnt_game(current_state)
         menacing_steps = []
         menacing_states = []
+        pygame.init()
+        ttt = pygame.display.set_mode ((300, 325))
+        pygame.display.set_caption ('Tic-Tac-Toe')
+        board = tictactoe.initBoard (ttt)
         while(True):
             # create the game board
-            board = tictactoe.initBoard (ttt)
             try:
-                row, col = [0,0]
                 for event in pygame.event.get():
                     if event.type is QUIT:
                         wanna_quit = True
                         break
                     elif event.type is MOUSEBUTTONDOWN:
                         # the user clicked; place an X or O
-                        tictactoe.clickBoard(board)
+                        board, row, col = tictactoe.clickBoard(board)
                         # check for a winner
-                        row, col = tictactoe.gameWon(board)
+                        tictactoe.gameWon(board)
+                        tictactoe.showBoard(ttt, board)
+                        if (row is None):
+                            continue
                         a = row * 3 + col
                         if current_state[a] == '0':
                             current_state[a] = '2'
@@ -166,6 +171,7 @@ def game_on(states, path, ttt):
                             break
                         prnt_game(current_state)
                         tictactoe.showBoard(ttt, board)
+                    tictactoe.showBoard(ttt, board)
             except ValueError:
                 print('The place is already  filled! Please fill an unoccupied  place')
                 continue
@@ -174,14 +180,11 @@ def game_on(states, path, ttt):
     pickle_out.close()
 
 def main():# --------------------------------------------------------------------
-# initialize pygame and our window
-    pygame.init()
-    ttt = pygame.display.set_mode ((300, 325))
-    pygame.display.set_caption ('Tic-Tac-Toe')
+    # initialize pygame and our window
     path = 'model.pickle'
     all_permutations  = ["".join(seq) for seq in itertools.product("012", repeat=9)]
     states = create_states(all_permutations)
-    game_on(states, path, ttt)
+    game_on(states, path)
 
 
 if __name__ == "__main__":
