@@ -25,9 +25,10 @@ class State():
         rand = np.random.rand(1)
         values = np.array(list(self.beads.values()))
         keys = np.array(list(self.beads.keys()))
-        print(values)
+        if np.sum(values) == 0:
+            values = np.ones(values.shape[0])
         values = values / np.sum(values)
-        print(values)
+        #print(values)
         prob = 0
         for  idx, i in enumerate(values):
             prob += i
@@ -103,6 +104,7 @@ def game_on(states, path):
     try:
         pickle_in = open(path,"rb")
         states = pickle.load(pickle_in)
+        'Model Loaded'
     except FileNotFoundError:
         pass
     wanna_quit = False
@@ -201,7 +203,7 @@ def game_on(states, path):
 def train_game(states, path, iterations):
     
     for _ in range(iterations):
-        print("Game Start")
+        #print("Game Start")
         current_state = list('000000000')
         prnt_game(current_state)
         menacing_steps1 = []
@@ -210,48 +212,50 @@ def train_game(states, path, iterations):
         menacing_states2 = []
         while(True):
             try:
-                print('PLAYER 1')
+                #print('PLAYER 1')
                 menacing_states1.append(tuple(current_state))
                 current_bead = states[''.join(current_state)].get_beads()
                 menacing_steps1.append(current_bead)
                 current_state[current_bead] = '1'
                 states = check_state(states, current_state)
-                print(current_bead)
-                prnt_game(current_state) 
+                #print(current_bead)
+                #prnt_game(current_state) 
                 if check_win(current_state):
-                    print('One won')
+                    #print('One won')
                     give_reward(states, menacing_states1, menacing_steps1, 3)
                     give_reward(states, menacing_states2, menacing_steps2, -1)
                     prnt_game(current_state) 
                     break
                 if check_draw(current_state):
-                    print('Game Draw')
+                    #print('Game Draw')
                     give_reward(states, menacing_states1, menacing_steps1, 1)
                     give_reward(states, menacing_states2, menacing_steps2, 1)
                     prnt_game(current_state)
                     break
-                print('PLAYER 2')
-                print(''.join(current_state))
+                #print('PLAYER 2')
+                #print(''.join(current_state))
                 menacing_states2.append(tuple(current_state))
                 current_bead = states[''.join(current_state)].get_beads()
                 menacing_steps2.append(current_bead)
+                print('YAHA')
+                print(current_state, current_bead)
                 current_state[current_bead] = '2'
                 states = check_state(states, current_state)
-                print(current_bead)
-                prnt_game(current_state) 
+                #print(current_bead)
+                #prnt_game(current_state) 
                 if check_win(current_state):
-                    print('Two won')
+                    #print('Two won')
                     give_reward(states, menacing_states1, menacing_steps1, -1)
                     give_reward(states, menacing_states2, menacing_steps2, 3)
                     prnt_game(current_state)
                     break
                 if check_draw(current_state):
-                    print('Game Draw')
+                    #print('Game Draw')
                     give_reward(states, menacing_states1, menacing_steps1, 1)
                     give_reward(states, menacing_states2, menacing_steps2, 1)
                     prnt_game(current_state)
                     break
-                prnt_game(current_state)
+                #prnt_game(current_state)
             except ValueError:
                 print('The place is already  filled! Please fill an unoccupied  place')
                 continue
