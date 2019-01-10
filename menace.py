@@ -105,7 +105,7 @@ def game_on(states, path):
         menacing_steps = []
         menacing_states = []
         pygame.init()
-        tictactoe.grid = [ [ None, None, None ], \
+        tictactoe.grid = [ [ None, Nonegit , None ], \
                             [ None, None, None ], \
                             [ None, None, None ] ]
         tictactoe.winner = None
