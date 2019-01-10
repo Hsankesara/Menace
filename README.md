@@ -5,10 +5,10 @@ AI  lab work
 
 To run the game
 ```bash
-python menace.py
+python3 menace.py
 ```
 
 To train the game
 ```bash
-python menace.py train NUM_ITERATIONS
+python3 menace.py train NUM_ITERATIONS
 ```
