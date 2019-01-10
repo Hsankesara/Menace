@@ -128,7 +128,7 @@ def game_on(states, path):
                         # check for a winner
                         tictactoe.gameWon(board)
                         tictactoe.showBoard(ttt, board)
-                        if (row is None):
+                        if row is None:
                             continue
                         a = row * 3 + col
                         if current_state[a] == '0':
