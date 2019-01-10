@@ -145,8 +145,8 @@ def game_on(states, path):
                         if check_draw(current_state):
                             give_reward(states, menacing_states, menacing_steps, 1)
                             prnt_game(current_state)
-                            wanna_quit = quit_prompt()
                             print('Game Draw')
+                            wanna_quit = quit_prompt()
                             new_game = True
                             break
                         print('********')
@@ -160,6 +160,7 @@ def game_on(states, path):
                         col_bead = current_bead % 3
                         tictactoe.drawMove (board, row_bead, col_bead, "O")
                         tictactoe.gameWon(board)
+                        tictactoe.showBoard(ttt, board)
                         if current_state[current_bead] == '0':
                             current_state[current_bead] = '1'
                         else:
