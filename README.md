@@ -1,7 +1,19 @@
-# AI-lab
-AI  lab work
+## Menace
+First install Requirements
+```
+pip3 install -r requirements.txt
+```
 
-|Project|Language|Reference|
-|-----|---------------|----------|
-|[Menace](Menace/)|Python|[Menace](http://chalkdustmagazine.com/features/menace-machine-educable-noughts-crosses-engine/)|
-|[n-arm bandit problem](n-arm_bandit_problem/)|Matlab|[Multi Arm bandit Problem](https://lilianweng.github.io/lil-log/2018/01/23/the-multi-armed-bandit-problem-and-its-solutions.html)|
+### Run the Game
+```bash
+python3 menace.py
+```
+![alt text](/images/menace_won.gif)
+![alt text](/images/menace_draw.gif)
+
+### Train Menace vs Menace
+```bash
+python3 menace.py train NUM_ITERATIONS
+```
+![alt text](/images/training-1.png)
+![alt text](/images/training-2.png)
